@@ -7,7 +7,7 @@ export default function Home() {
     return res.json();
   });
 
-  console.log({ data });
+  console.log({ error });
 
   return (
     <div className="container">
@@ -40,6 +40,10 @@ export default function Home() {
       <style jsx>{`
         * {
           box-sizing: border-box;
+        }
+
+        body {
+          background: #fff;
         }
 
         .container {
