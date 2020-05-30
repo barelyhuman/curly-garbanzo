@@ -24,13 +24,15 @@ export default function Home() {
         ) : (
           data.map((item) => {
             return (
-              <div className="card" key={item.id}>
-                <div>
-                  <img className="card-img" src={item.image} alt="" />
-                  <p>{item.name}</p>
-                  <p>{item.price}</p>
+              <a href={item.link}>
+                <div className="card" key={item.id}>
+                  <div>
+                    <img className="card-img" src={item.image} alt="" />
+                    <p>{item.name}</p>
+                    <p>{item.price}</p>
+                  </div>
                 </div>
-              </div>
+              </a>
             );
           })
         )}

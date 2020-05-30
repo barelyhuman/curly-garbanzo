@@ -3,12 +3,28 @@ import puppeteer from "puppeteer";
 import cheerio from "cheerio";
 import axios from "axios";
 import fs from "fs";
+import mkdirp from "mkdirp";
 
 export async function fetchFromEpicStore() {
     try {
+        const filePath = "temp/results.json";
+        mkdirp("temp");
+
         const source = "https://www.epicgames.com";
         const url =
             "https://www.epicgames.com/store/en-US/browse?sortBy=releaseDate&sortDir=DESC&pageSize=1000";
+
+        const existingData = fs.readFileSync("temp/results.json");
+        if (existingData) {
+            const parsedValue = JSON.parse(existingData);
+            if (
+                parsedValue &&
+                new Date(parsedValue.expiryTime).getTime() <
+                    new Date().getTime()
+            ) {
+                return existingData.records;
+            }
+        }
 
         const browser = await puppeteer.launch({
             args: ["--no-sandbox", "--disable-setuid-sandbox"],
@@ -78,6 +94,15 @@ export async function fetchFromEpicStore() {
                 }
             }
         });
+
+        const fileData = {
+            expiryTime: new Date(
+                new Date().setHours(new Date().getHours() + 1)
+            ),
+            records: result,
+        };
+
+        fs.writeFileSync("temp/results.json", JSON.stringify(fileData));
 
         return result;
     } catch (err) {
