@@ -11,7 +11,7 @@ export async function fetchFromEpicStore() {
             "https://www.epicgames.com/store/en-US/browse?sortBy=releaseDate&sortDir=DESC&pageSize=1000";
 
         const browser = await puppeteer.launch({
-            args: chrome.args,
+            args: ["--no-sandbox", "--disable-setuid-sandbox"],
             executablePath: await chrome.executablePath,
             headless: true,
         });
