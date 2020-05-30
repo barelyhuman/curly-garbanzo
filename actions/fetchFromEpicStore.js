@@ -106,6 +106,7 @@ export async function fetchFromEpicStore() {
 
         fs.writeFileSync("temp/results.json", JSON.stringify(fileData));
 
+        await browser.close();
         return result;
     } catch (err) {
         console.error(err);
