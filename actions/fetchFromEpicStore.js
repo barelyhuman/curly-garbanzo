@@ -14,15 +14,17 @@ export async function fetchFromEpicStore() {
         const url =
             "https://www.epicgames.com/store/en-US/browse?sortBy=releaseDate&sortDir=DESC&pageSize=1000";
 
-        const existingData = fs.readFileSync("temp/results.json");
-        if (existingData) {
-            const parsedValue = JSON.parse(existingData);
-            if (
-                parsedValue &&
-                new Date(parsedValue.expiryTime).getTime() <
-                    new Date().getTime()
-            ) {
-                return existingData.records;
+        if (fs.existsSync(filePath)) {
+            const existingData = fs.readFileSync("temp/results.json");
+            if (existingData) {
+                const parsedValue = JSON.parse(existingData);
+                if (
+                    parsedValue &&
+                    new Date(parsedValue.expiryTime).getTime() <
+                        new Date().getTime()
+                ) {
+                    return existingData.records;
+                }
             }
         }
 
