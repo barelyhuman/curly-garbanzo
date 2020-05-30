@@ -9,33 +9,39 @@ export default function Home() {
 
   console.log({ error });
 
+  if (error) {
+    return <React.Fragment></React.Fragment>;
+  }
+
+  if (!data) {
+    return (
+      <div>
+        Loading....
+        <p>
+          <small>
+            Can take a while, since we get the latest data from epic store
+          </small>
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="container">
       <div className="grid">
-        {!data ? (
-          <div>
-            Loading....
-            <p>
-              <small>
-                Can take a while, since we get the latest data from epic store
-              </small>
-            </p>
-          </div>
-        ) : (
-          data.map((item) => {
-            return (
-              <a href={item.link}>
-                <div className="card" key={item.id}>
-                  <div>
-                    <img className="card-img" src={item.image} alt="" />
-                    <p>{item.name}</p>
-                    <p>{item.price}</p>
-                  </div>
+        {data.map((item) => {
+          return (
+            <a href={item.link}>
+              <div className="card" key={item.id}>
+                <div>
+                  <img className="card-img" src={item.image} alt="" />
+                  <p>{item.name}</p>
+                  <p>{item.price}</p>
                 </div>
-              </a>
-            );
-          })
-        )}
+              </div>
+            </a>
+          );
+        })}
       </div>
       <style jsx>{`
         * {
