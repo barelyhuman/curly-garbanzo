@@ -1,4 +1,3 @@
-import chrome from "chrome-aws-lambda";
 import puppeteer from "puppeteer";
 import cheerio from "cheerio";
 import axios from "axios";
@@ -30,7 +29,6 @@ export async function fetchFromEpicStore() {
 
         const browser = await puppeteer.launch({
             args: ["--no-sandbox", "--disable-setuid-sandbox"],
-            executablePath: await chrome.executablePath,
             headless: true,
         });
 
