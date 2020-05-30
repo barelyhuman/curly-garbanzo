@@ -6,6 +6,14 @@ import fs from "fs";
 
 export async function fetchFromEpicStore() {
     try {
+        const filePath = "temp/records.json";
+
+        const readData = fs.readFileSync(filePath);
+
+        if (readData) {
+            return JSON.parse(readData);
+        }
+
         const source = "https://www.epicgames.com";
         const url =
             "https://www.epicgames.com/store/en-US/browse?sortBy=releaseDate&sortDir=DESC&pageSize=1000";
@@ -22,8 +30,6 @@ export async function fetchFromEpicStore() {
         });
 
         let bodyHTML = await page.evaluate(() => document.body.innerHTML);
-
-        fs.writeFileSync("temp.html", bodyHTML);
 
         const gameCardSelector = ".BrowseGrid-card_9f6a50fb";
         const gamePriceSelector =
@@ -80,6 +86,8 @@ export async function fetchFromEpicStore() {
                 }
             }
         });
+
+        fs.writeFileSync("temp/records.json", JSON.stringify(result));
 
         return result;
     } catch (err) {
