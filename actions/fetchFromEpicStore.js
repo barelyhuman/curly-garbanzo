@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer';
 import cheerio from 'cheerio';
-import child_process from 'child_process';
+import shelljs from 'shelljs';
 
 export async function fetchFromEpicStore() {
   let browser;
@@ -82,24 +82,9 @@ export async function fetchFromEpicStore() {
         result.push(itemDetails);
       }
     });
-
-    // browser.on('disconnected', () => {
-    //   setTimeout(function () {
-    //     child_process.exec(`kill -9 ${process}`, (error, stdout, stderr) => {
-    //       if (error) {
-    //         console.log(`Process Kill Error: ${error}`);
-    //       }
-    //       console.log(
-    //         `Process Kill Success. stdout: ${stdout} stderr:${stderr}`
-    //       );
-    //     });
-    //   }, 100);
-    // });
-
-    // await browser.disconnect();
     await page.close();
-
     await browser.close();
+    shelljs.exec('pkill chrome');
     return result;
   } catch (err) {
     if (browser) {
