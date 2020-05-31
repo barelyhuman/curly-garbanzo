@@ -16,7 +16,11 @@ export async function fetchFromEpicStore() {
 
         const page = await browser.newPage();
 
-        await page.goto(url);
+        await page.goto(url,{
+            waitUntil:'networkidle2'
+        });
+
+        await page.waitFor(6000);
 
         let bodyHTML = await page.evaluate(() => document.body.innerHTML);
 
@@ -27,10 +31,8 @@ export async function fetchFromEpicStore() {
         const nameSelector = ".OfferTitleInfo-title_abc02a91";
         const $ = cheerio.load(bodyHTML);
 
-        await page.waitForSelector(gamePriceSelector);
-
         const result = [];
-
+        
         $(gameCardSelector).each((i, elem) => {
             const itemDetails = {
                 id: i,
@@ -44,6 +46,7 @@ export async function fetchFromEpicStore() {
             const imageContainer = $(imageSelector, elem);
             const nameContainer = $(nameSelector, elem);
 
+            
             itemDetails.name =
                 nameContainer[0] &&
                 nameContainer[0].children[0] &&
@@ -55,20 +58,23 @@ export async function fetchFromEpicStore() {
             itemDetails.link =
                 source +
                 "" +
-                (elem.children[0] &&
+                (elem && elem.children[0] &&
                     elem.children[0].attribs &&
                     elem.children[0].attribs.href);
 
-            itemDetails.price = priceContainer[0].children[0]
+            itemDetails.price = priceContainer[0] && priceContainer[0].children[0]
                 ? priceContainer[0].children[0].data
                 : null;
 
-            if (itemDetails.price.toLowerCase().includes("free")) {
+            if (itemDetails.price && itemDetails.price.toLowerCase().includes("free")) {
                 result.push(itemDetails);
             }
         });
 
         await browser.close();
+
+        
+
         return result;
     } catch (err) {
         console.error(err);
