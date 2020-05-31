@@ -96,6 +96,8 @@ export async function fetchFromEpicStore() {
     // });
 
     // await browser.disconnect();
+    await page.close();
+
     await browser.close();
     return result;
   } catch (err) {
