@@ -1,80 +1,88 @@
-import puppeteer from "puppeteer";
-import cheerio from "cheerio";
+import puppeteer from 'puppeteer';
+import cheerio from 'cheerio';
 
 export async function fetchFromEpicStore() {
-    try {
-        const source = "https://www.epicgames.com";
-        const url =
-            "https://www.epicgames.com/store/en-US/browse?sortBy=releaseDate&sortDir=DESC&pageSize=1000";
+  try {
+    const source = 'https://www.epicgames.com';
+    const url =
+      'https://www.epicgames.com/store/en-US/browse?sortBy=releaseDate&sortDir=DESC&pageSize=20';
 
-        const browser = await puppeteer.launch({
-            args: ["--no-sandbox", "--disable-setuid-sandbox"],
-            headless: true,
-        });
+    const browser = await puppeteer.launch({
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-gpu',
+        '--single-process',
+        '--disable-web-security',
+      ],
+      headless: true,
+    });
 
-        const page = await browser.newPage();
+    const page = await browser.newPage();
 
-        await page.goto(url,{
-            waitUntil:'networkidle2'
-        });
+    await page.goto(url, {
+      waitUntil: 'networkidle2',
+    });
 
-        await page.waitFor(6000);
+    let bodyHTML = await page.evaluate(() => document.body.innerHTML);
 
-        let bodyHTML = await page.evaluate(() => document.body.innerHTML);
+    const gameCardSelector = '.BrowseGrid-card_9f6a50fb';
+    const gamePriceSelector = '.PurchasePrice-priceContainer_f0baeac9 > span';
+    const imageSelector = '.Picture-picture_6dd45462 > img';
+    const nameSelector = '.OfferTitleInfo-title_abc02a91';
 
-        const gameCardSelector = ".BrowseGrid-card_9f6a50fb";
-        const gamePriceSelector =
-            ".PurchasePrice-priceContainer_f0baeac9 > span";
-        const imageSelector = ".Picture-picture_6dd45462 > img";
-        const nameSelector = ".OfferTitleInfo-title_abc02a91";
-        const $ = cheerio.load(bodyHTML);
+    const $ = cheerio.load(bodyHTML);
 
-        const result = [];
-        
-        $(gameCardSelector).each((i, elem) => {
-            const itemDetails = {
-                id: i,
-                name: null,
-                image: null,
-                link: null,
-                price: null,
-            };
+    await page.waitForSelector(gamePriceSelector);
 
-            const priceContainer = $(gamePriceSelector, elem);
-            const imageContainer = $(imageSelector, elem);
-            const nameContainer = $(nameSelector, elem);
+    const result = [];
+    $(gameCardSelector).each((i, elem) => {
+      const itemDetails = {
+        id: i,
+        name: null,
+        image: null,
+        link: null,
+        price: null,
+      };
 
-            
-            itemDetails.name =
-                nameContainer[0] &&
-                nameContainer[0].children[0] &&
-                nameContainer[0].children[0].data;
+      const priceContainer = $(gamePriceSelector, elem);
+      const imageContainer = $(imageSelector, elem);
+      const nameContainer = $(nameSelector, elem);
 
-            itemDetails.image =
-                imageContainer[0] && imageContainer[0].attribs["data-image"];
+      itemDetails.name =
+        nameContainer[0] &&
+        nameContainer[0].children[0] &&
+        nameContainer[0].children[0].data;
 
-            itemDetails.link =
-                source +
-                "" +
-                (elem && elem.children[0] &&
-                    elem.children[0].attribs &&
-                    elem.children[0].attribs.href);
+      itemDetails.image =
+        imageContainer[0] && imageContainer[0].attribs['data-image'];
 
-            itemDetails.price = priceContainer[0] && priceContainer[0].children[0]
-                ? priceContainer[0].children[0].data
-                : null;
+      itemDetails.link =
+        source +
+        '' +
+        (elem &&
+          elem.children[0] &&
+          elem.children[0].attribs &&
+          elem.children[0].attribs.href);
 
-            if (itemDetails.price && itemDetails.price.toLowerCase().includes("free")) {
-                result.push(itemDetails);
-            }
-        });
+      itemDetails.price =
+        priceContainer[0] && priceContainer[0].children[0]
+          ? priceContainer[0].children[0].data
+          : null;
 
-        await browser.close();
+      if (
+        itemDetails.price &&
+        itemDetails.price.toLowerCase().includes('free')
+      ) {
+        result.push(itemDetails);
+      }
+    });
 
-        return result;
-    } catch (err) {
-        throw err;
-    }
+    await browser.close();
+    return result;
+  } catch (err) {
+    throw err;
+  }
 }
 
 export default fetchFromEpicStore;
