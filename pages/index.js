@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import useSWR from 'swr';
 import PageContainer from 'components/PageContainer';
 
