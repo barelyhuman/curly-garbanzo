@@ -1,4 +1,4 @@
-import chromium from 'chrome-aws-lambda';
+import puppeteer from 'puppeteer';
 import cheerio from 'cheerio';
 
 export async function fetchFromEpicStore() {
@@ -7,11 +7,14 @@ export async function fetchFromEpicStore() {
     const url =
       'https://www.epicgames.com/store/en-US/browse?sortBy=releaseDate&sortDir=DESC&pageSize=1000';
 
-    const browser = await chromium.puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath,
-      headless: chromium.headless,
+    const browser = await puppeteer.launch({
+      args: [
+        '--disable-gpu',
+        '--no-sandbox',
+        '--single-process',
+        '--disable-web-security',
+      ],
+      headless: true,
       ignoreHTTPSErrors: true,
     });
 
