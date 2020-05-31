@@ -1,5 +1,6 @@
 import puppeteer from 'puppeteer';
 import cheerio from 'cheerio';
+import child_process from 'child_process';
 
 export async function fetchFromEpicStore() {
   try {
@@ -18,10 +19,12 @@ export async function fetchFromEpicStore() {
       ignoreHTTPSErrors: true,
     });
 
+    const processId = browser.process().pid;
+
     const page = await browser.newPage();
 
     await page.goto(url, {
-      waitUntil: 'networkidle2',
+      waitUntil: 'networkidle0',
     });
 
     let bodyHTML = await page.evaluate(() => document.body.innerHTML);
@@ -78,7 +81,20 @@ export async function fetchFromEpicStore() {
       }
     });
 
-    await browser.close();
+    browser.on('disconnected', () => {
+      setTimeout(function () {
+        child_process.exec(`kill -9 ${processId}`, (error, stdout, stderr) => {
+          if (error) {
+            console.log(`Process Kill Error: ${error}`);
+          }
+          console.log(
+            `Process Kill Success. stdout: ${stdout} stderr:${stderr}`
+          );
+        });
+      }, 100);
+    });
+
+    await browser.disconnect();
     return result;
   } catch (err) {
     throw err;
