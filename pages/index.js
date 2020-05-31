@@ -1,5 +1,7 @@
 import useSWR from 'swr';
+import { start, done } from 'components/nprogress';
 import PageContainer from 'components/PageContainer';
+import ifWindow from 'lib/if-window';
 
 export default function Home() {
   const { data, error } = useSWR('/api/games/epic', async (...args) => {
@@ -7,8 +9,17 @@ export default function Home() {
     return res.json();
   });
 
-  if (error) return <div>failed to load</div>;
-  if (!data) return <div>loading...</div>;
+  if (error) {
+    ifWindow() ? done() : null;
+    return <div>failed to load</div>;
+  }
+  if (!data) {
+    ifWindow() ? start() : null;
+    return <div></div>;
+  }
+
+  ifWindow() ? done() : null;
+
   return (
     <PageContainer>
       <div className="container">
