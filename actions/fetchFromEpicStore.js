@@ -15,6 +15,7 @@ export async function fetchFromEpicStore() {
         '--no-sandbox',
         '--single-process',
         '--disable-web-security',
+        '--no-zygote',
       ],
       headless: true,
       ignoreHTTPSErrors: true,
