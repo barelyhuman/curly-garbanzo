@@ -3,12 +3,13 @@ import cheerio from 'cheerio';
 import child_process from 'child_process';
 
 export async function fetchFromEpicStore() {
+  let browser;
   try {
     const source = 'https://www.epicgames.com';
     const url =
       'https://www.epicgames.com/store/en-US/browse?sortBy=releaseDate&sortDir=DESC&pageSize=1000';
 
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       args: [
         '--disable-gpu',
         '--no-sandbox',
@@ -81,24 +82,31 @@ export async function fetchFromEpicStore() {
       }
     });
 
-    browser.on('disconnected', () => {
-      setTimeout(function () {
-        child_process.exec(`kill -9 ${processId}`, (error, stdout, stderr) => {
-          if (error) {
-            console.log(`Process Kill Error: ${error}`);
-          }
-          console.log(
-            `Process Kill Success. stdout: ${stdout} stderr:${stderr}`
-          );
-        });
-      }, 100);
-    });
+    // browser.on('disconnected', () => {
+    //   setTimeout(function () {
+    //     child_process.exec(`kill -9 ${process}`, (error, stdout, stderr) => {
+    //       if (error) {
+    //         console.log(`Process Kill Error: ${error}`);
+    //       }
+    //       console.log(
+    //         `Process Kill Success. stdout: ${stdout} stderr:${stderr}`
+    //       );
+    //     });
+    //   }, 100);
+    // });
 
-    await browser.disconnect();
+    // await browser.disconnect();
     await browser.close();
     return result;
   } catch (err) {
+    if (browser) {
+      await browser.close();
+    }
     throw err;
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
   }
 }
 
