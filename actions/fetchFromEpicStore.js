@@ -1,7 +1,5 @@
 import puppeteer from "puppeteer";
 import cheerio from "cheerio";
-import axios from "axios";
-import fs from "fs";
 
 export async function fetchFromEpicStore() {
     try {
@@ -73,11 +71,9 @@ export async function fetchFromEpicStore() {
 
         await browser.close();
 
-        
-
         return result;
     } catch (err) {
-        console.error(err);
+        throw err;
     }
 }
 

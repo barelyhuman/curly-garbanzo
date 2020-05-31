@@ -4,7 +4,7 @@ export default async (req, res) => {
   try {
     if (req.method === "GET") {
       const data = await fetchFromEpicStore();
-      res.status(200).send(data || []);
+      return res.status(200).send(data || []);
     }
     return res.send(404).end();
   } catch (err) {
