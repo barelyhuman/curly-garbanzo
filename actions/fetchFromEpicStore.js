@@ -6,7 +6,7 @@ export async function fetchFromEpicStore() {
   try {
     const source = 'https://www.epicgames.com';
     const url =
-      'https://www.epicgames.com/store/en-US/browse?sortBy=releaseDate&sortDir=DESC&pageSize=20';
+      'https://www.epicgames.com/store/en-US/browse?sortBy=releaseDate&sortDir=DESC&pageSize=10';
 
     const browser = await chromium.puppeteer.launch({
       args: chromium.args,
