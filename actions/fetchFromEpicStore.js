@@ -55,8 +55,6 @@ export async function fetchFromEpicStore() {
       const imageContainer = $(imageSelector, elem);
       const nameContainer = $(nameSelector, elem);
 
-      console.log(priceContainer);
-
       itemDetails.name =
         nameContainer[0] &&
         nameContainer[0].children[0] &&
