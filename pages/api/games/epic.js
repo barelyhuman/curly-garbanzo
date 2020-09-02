@@ -1,9 +1,9 @@
-import { fetchFromEpicStore } from 'actions/fetchFromEpicStore';
+const db = require('quick.db');
 
-export default async (req, res) => {
+module.exports = async (req, res) => {
   try {
     if (req.method === 'GET') {
-      const data = await fetchFromEpicStore();
+      const data = db.get('epic');
       return res.status(200).send(data || []);
     }
     return res.send(404).end();

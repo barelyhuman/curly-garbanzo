@@ -1,8 +1,8 @@
-import puppeteer from 'puppeteer';
-import cheerio from 'cheerio';
-import shelljs from 'shelljs';
+const puppeteer = require('puppeteer');
+const cheerio = require('cheerio');
+const shelljs = require('shelljs');
 
-export async function fetchFromEpicStore() {
+async function fetchFromEpicStore() {
   let browser;
   try {
     const source = 'https://www.epicgames.com';
@@ -24,6 +24,7 @@ export async function fetchFromEpicStore() {
     const processId = browser.process().pid;
 
     const page = await browser.newPage();
+    await page.setDefaultNavigationTimeout(0);
 
     await page.goto(url, {
       waitUntil: 'networkidle0',
@@ -99,4 +100,4 @@ export async function fetchFromEpicStore() {
   }
 }
 
-export default fetchFromEpicStore;
+module.exports = fetchFromEpicStore;

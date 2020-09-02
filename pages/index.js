@@ -29,6 +29,10 @@ export default function Home() {
           free accross online gaming stores like Steam, Epic Store etc.
         </p>
         <p>
+          <strong>Note:</strong> The Server scrapes every 15 minutes so if you
+          don't see any data , the server's are probably updating data
+        </p>
+        <p>
           <strong>Currently Scraping:</strong> Epic Store
         </p>
         <div className="grid">

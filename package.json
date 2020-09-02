@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "nodemon server.js",
     "build": "next build",
-    "start": "next start -p $PORT"
+    "start": "node server.js"
   },
   "engines": {
     "node": "v10.18.1"
@@ -19,6 +19,7 @@
     "nprogress": "^0.2.0",
     "puppeteer": "^3.2.0",
     "puppeteer-core": "^3.2.0",
+    "quick.db": "^7.1.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "shelljs": "^0.8.4",
