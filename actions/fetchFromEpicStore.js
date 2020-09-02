@@ -31,10 +31,11 @@ export async function fetchFromEpicStore() {
 
     let bodyHTML = await page.evaluate(() => document.body.innerHTML);
 
-    const gameCardSelector = '.BrowseGrid-card_9f6a50fb';
-    const gamePriceSelector = '.PurchasePrice-priceContainer_f0baeac9 > span';
-    const imageSelector = '.Picture-picture_6dd45462 > img';
-    const nameSelector = '.OfferTitleInfo-title_abc02a91';
+    const gameCardSelector = '.css-1adx3p4-BrowseGrid-styles__card';
+    const gamePriceSelector =
+      '.css-r6gfjb-PurchasePrice__priceContainer > span';
+    const imageSelector = '.css-10ldwzp-Picture-styles__picture > img';
+    const nameSelector = '.css-tybchz-OfferTitleInfo__title';
 
     const $ = cheerio.load(bodyHTML);
 
@@ -53,6 +54,8 @@ export async function fetchFromEpicStore() {
       const priceContainer = $(gamePriceSelector, elem);
       const imageContainer = $(imageSelector, elem);
       const nameContainer = $(nameSelector, elem);
+
+      console.log(priceContainer);
 
       itemDetails.name =
         nameContainer[0] &&
