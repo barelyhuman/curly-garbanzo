@@ -22,7 +22,7 @@
     "quick.db": "^7.1.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "shelljs": "^0.8.4",
+    "shelljs": "^0.8.5",
     "swr": "^0.2.2"
   },
   "devDependencies": {
